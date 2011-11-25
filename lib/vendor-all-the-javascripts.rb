@@ -1,11 +1,8 @@
 require "vendor-all-the-javascripts/version"
 
-module Vendor
-  module All
-    module The
-      module Javascripts
-        # Your code goes here...
-      end
+module VendorAllTheJavaScripts
+  if defined?(Rails)
+    class Railtie < Rails::Engine
     end
   end
 end

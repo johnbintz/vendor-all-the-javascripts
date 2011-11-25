@@ -4,12 +4,12 @@ require "vendor-all-the-javascripts/version"
 
 Gem::Specification.new do |s|
   s.name        = "vendor-all-the-javascripts"
-  s.version     = Vendor::All::The::Javascripts::VERSION
+  s.version     = VendorAllTheJavaScripts::VERSION
   s.authors     = ["John Bintz"]
   s.email       = ["john@coswellproductions.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Vendored JavaScript thigns I use}
+  s.description = %q{Vendored JavaScript thigns I use}
 
   s.rubyforge_project = "vendor-all-the-javascripts"
 
