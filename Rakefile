@@ -23,7 +23,7 @@ sources = {
     end
   },
   'jquery-viewport' => [
-    'https://raw.github.com/borbit/jquery.viewport/master/jquery.viewport.js'
+    'http://www.appelsiini.net/download/jquery.viewport.js'
   ],
   'better-autocomplete' => [
     'https://raw.github.com/betamos/Better-Autocomplete/develop/src/jquery.better-autocomplete.js',

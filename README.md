@@ -4,7 +4,7 @@ Every other project is owned by the original owner, I'm just aggregating for my 
 
 * [jquery.cookies.js](http://code.google.com/p/cookies)
 * [jquery.elastic.js](http://unwrongest.com/projects/elastic/)
-* [jquery.viewport.js](https://github.com/borbit/jquery.viewport)
+* [jquery.viewport.js](http://www.appelsiini.net/projects/viewport)
 * [Better-Autocomplete](https://github.com/betamos/Better-Autocomplete)
 * [Moment.js](https://github.com/timrwood/moment)
 * [Ajax File Upload](http://phpletter.com/Our-Projects/AjaxFileUpload/)
