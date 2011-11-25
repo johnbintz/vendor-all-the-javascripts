@@ -12,8 +12,8 @@ def process_zip_url(url, &block)
 end
 
 sources = {
-  'jquery.cookie' => [
-    'https://raw.github.com/carhartl/jquery-cookie/master/jquery.cookie.js'
+  'jquery.cookies' => [
+    'http://cookies.googlecode.com/svn/trunk/jquery.cookies.js'
   ],
   'jquery-elastic' => lambda {
     process_zip_url('http://jquery-elastic.googlecode.com/files/jquery.elastic-1.6.11.zip') do |entry|
@@ -46,6 +46,8 @@ sources = {
 
 desc 'Update verything'
 task :update do
+  rm_rf 'vendor/assets'
+
   sources.each do |name, files|
     case files
     when Array
