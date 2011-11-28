@@ -9,4 +9,4 @@ Every other project is owned by the original owner, I'm just aggregating for my 
 * [Moment.js](https://github.com/timrwood/moment)
 * [Ajax File Upload](http://phpletter.com/Our-Projects/AjaxFileUpload/)
 * [jQuery UI Timepicker Addon](http://trentrichardson.com/examples/timepicker/)
-
+* [underscore.string](https://github.com/edtsech/underscore.string)

@@ -52,6 +52,9 @@ sources = {
   },
   'jquery-ui-timepicker' => [
     'http://trentrichardson.com/examples/timepicker/js/jquery-ui-timepicker-addon.js'
+  ],
+  'underscore.string' => [
+    'https://raw.github.com/edtsech/underscore.string/master/lib/underscore.string.js'
   ]
 }
 
