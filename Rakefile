@@ -2,13 +2,28 @@ require "bundler/gem_tasks"
 require 'httparty'
 require 'zip/zip'
 
-def process_zip_url(url, &block)
+def process_zip_url(url, entries = {})
   mkdir_p 'tmp' 
 
   response = HTTParty.get(url)
   File.open(target = 'tmp/elastic.zip', 'wb') { |fh| fh.print response.body }
 
-  Zip::ZipFile.foreach(target, &block)
+  Zip::ZipFile.foreach(target) do |entry|
+    entries.each do |search_entry, target_filename|
+      if entry.name[search_entry]
+        case File.extname(search_entry)
+        when '.js'
+          target = 'vendor/assets/javascripts'
+        when '.css'
+          target = 'vendor/assets/stylesheets'
+        end
+
+        entry.extract(File.join(target, target_filename))
+      end
+      
+      yield entry if block_given?
+    end
+  end
 end
 
 sources = {
@@ -16,11 +31,9 @@ sources = {
     'http://cookies.googlecode.com/svn/trunk/jquery.cookies.js'
   ],
   'jquery-elastic' => lambda {
-    process_zip_url('http://jquery-elastic.googlecode.com/files/jquery.elastic-1.6.11.zip') do |entry|
-      if entry.name['jquery.elastic.source.js']
-        entry.extract('vendor/assets/javascripts/jquery.elastic.js') { true }
-      end
-    end
+    process_zip_url('http://jquery-elastic.googlecode.com/files/jquery.elastic-1.6.11.zip', {
+      'jquery.elastic.source.js' => 'jquery.elastic.js'
+    })
   },
   'jquery-viewport' => [
     'http://www.appelsiini.net/download/jquery.viewport.js'
@@ -33,11 +46,9 @@ sources = {
     'https://raw.github.com/timrwood/moment/master/moment.js'
   ],
   'ajaxfileuploader' => lambda {
-    process_zip_url('http://phpletter.com/download_project_version.php?version_id=34') do |entry|
-      if entry.name['ajaxfileupload.js']
-        entry.extract('vendor/assets/javascripts/ajaxfileupload.js') { true }
-      end
-    end
+    process_zip_url('http://phpletter.com/download_project_version.php?version_id=34', {
+      'ajaxfileupload.js' => 'ajaxfileupload.js'
+    })
   },
   'jquery-ui-timepicker' => [
     'http://trentrichardson.com/examples/timepicker/js/jquery-ui-timepicker-addon.js'
