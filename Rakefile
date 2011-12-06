@@ -2,30 +2,6 @@ require "bundler/gem_tasks"
 require 'httparty'
 require 'zip/zip'
 
-def process_zip_url(url, entries = {})
-  mkdir_p 'tmp' 
-
-  response = HTTParty.get(url)
-  File.open(target = 'tmp/elastic.zip', 'wb') { |fh| fh.print response.body }
-
-  Zip::ZipFile.foreach(target) do |entry|
-    entries.each do |search_entry, target_filename|
-      if entry.name[search_entry]
-        case File.extname(search_entry)
-        when '.js'
-          target = 'vendor/assets/javascripts'
-        when '.css'
-          target = 'vendor/assets/stylesheets'
-        end
-
-        entry.extract(File.join(target, target_filename))
-      end
-      
-      yield entry if block_given?
-    end
-  end
-end
-
 sources = {
   'jquery.cookies' => [
     'http://cookies.googlecode.com/svn/trunk/jquery.cookies.js'
@@ -55,8 +31,35 @@ sources = {
   ],
   'underscore.string' => [
     'https://raw.github.com/edtsech/underscore.string/master/lib/underscore.string.js'
+  ],
+  'jScroll' => [
+    'https://github.com/downloads/wduffy/jScroll/jquery.jscroll.js'
   ]
 }
+
+def process_zip_url(url, entries = {})
+  mkdir_p 'tmp' 
+
+  response = HTTParty.get(url)
+  File.open(target = 'tmp/elastic.zip', 'wb') { |fh| fh.print response.body }
+
+  Zip::ZipFile.foreach(target) do |entry|
+    entries.each do |search_entry, target_filename|
+      if entry.name[search_entry]
+        case File.extname(search_entry)
+        when '.js'
+          target = 'vendor/assets/javascripts'
+        when '.css'
+          target = 'vendor/assets/stylesheets'
+        end
+
+        entry.extract(File.join(target, target_filename))
+      end
+      
+      yield entry if block_given?
+    end
+  end
+end
 
 desc 'Update verything'
 task :update do
