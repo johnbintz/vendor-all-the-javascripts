@@ -4,7 +4,14 @@ require 'zip/zip'
 
 sources = {
   'jquery.cookies' => [
-    'http://cookies.googlecode.com/svn/trunk/jquery.cookies.js'
+    'http://cookies.googlecode.com/svn/trunk/jquery.cookies.js',
+    'http://cookies.googlecode.com/svn/trunk/jaaulde.cookies.js',
+    lambda {
+      lines = File.readlines(cookies = 'vendor/assets/javascripts/jquery.cookies.js')
+
+      lines.unshift("//= require jaaulde.cookies")
+      File.open(cookies, 'wb') { |fh| fh.print lines.collect(&:strip).join("\n") }
+    }
   ],
   'jquery-elastic' => lambda {
     process_zip_url('http://jquery-elastic.googlecode.com/files/jquery.elastic-1.6.11.zip', {
@@ -38,7 +45,7 @@ sources = {
 }
 
 def process_zip_url(url, entries = {})
-  mkdir_p 'tmp' 
+  mkdir_p 'tmp'
 
   response = HTTParty.get(url)
   File.open(target = 'tmp/elastic.zip', 'wb') { |fh| fh.print response.body }
@@ -69,18 +76,23 @@ task :update do
     case files
     when Array
       files.each do |url|
-        puts "Retrieving #{url} for #{name}..."
-        response = HTTParty.get(url, :format => 'application/octet-stream')
+        case url
+        when String
+          puts "Retrieving #{url} for #{name}..."
+          response = HTTParty.get(url, :format => 'application/octet-stream')
 
-        case File.extname(url)
-        when '.js'
-          target = Pathname('vendor/assets/javascripts')
-        when '.css'
-          target = Pathname('vendor/assets/stylesheets')
+          case File.extname(url)
+          when '.js'
+            target = Pathname('vendor/assets/javascripts')
+          when '.css'
+            target = Pathname('vendor/assets/stylesheets')
+          end
+
+          target.mkpath
+          target.join(File.basename(url)).open('wb') { |fh| fh.print response.body }
+        when Proc
+          url.call
         end
-
-        target.mkpath
-        target.join(File.basename(url)).open('wb') { |fh| fh.print response.body }
       end
     when Proc
       puts "Executing code for #{name}..."
