@@ -101,6 +101,12 @@ jQuery.extend({
                     if ( status != "error" )
 					{
                         // process the data (runs the xml through httpData regardless of callback)
+                        if ($('pre', xml.responseText)) {
+                          var $doc = $("<div />").append(xml.responseText);
+
+                          xml = { responseText: $doc.find('pre').get(0).innerHTML};
+                        }
+
                         var data = jQuery.uploadHttpData( xml, s.dataType );    
                         // If a local callback was specified, fire it and pass it the data
                         if ( s.success )
