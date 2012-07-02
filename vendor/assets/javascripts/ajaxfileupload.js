@@ -86,6 +86,7 @@ jQuery.extend({
 					 xml.responseText = io.contentDocument.document.body?io.contentDocument.document.body.innerHTML:null;
                 	xml.responseXML = io.contentDocument.document.XMLDocument?io.contentDocument.document.XMLDocument:io.contentDocument.document;
 				}						
+        xml.responseText = xml.responseText.replace(/^<pre>(.*)<\/pre>$/, '$1');
             }catch(e)
 			{
 				jQuery.handleError(s, xml, null, e);

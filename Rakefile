@@ -44,13 +44,17 @@ sources = {
   ]
 }
 
-def process_zip_url(url, entries = {})
+def open_zip_url(url, &block)
   mkdir_p 'tmp'
 
   response = HTTParty.get(url)
-  File.open(target = 'tmp/elastic.zip', 'wb') { |fh| fh.print response.body }
+  File.open(target = 'tmp/zip.zip', 'wb') { |fh| fh.print response.body }
 
-  Zip::ZipFile.foreach(target) do |entry|
+  Zip::ZipFile.foreach(target, &block)
+end
+
+def process_zip_url(url, entries = {})
+  open_zip_url(url) do |entry|
     entries.each do |search_entry, target_filename|
       if entry.name[search_entry]
         case File.extname(search_entry)
@@ -62,13 +66,13 @@ def process_zip_url(url, entries = {})
 
         entry.extract(File.join(target, target_filename))
       end
-      
+
       yield entry if block_given?
     end
   end
 end
 
-desc 'Update verything'
+desc 'Update everything'
 task :update do
   rm_rf 'vendor/assets'
 
@@ -102,4 +106,45 @@ task :update do
 end
 
 task :default => :update
+
+desc 'Update Plupload'
+task :update_plupload do
+  js = 'vendor-special/javascripts/plupload'
+  css = 'vendor-special/stylesheets/plupload'
+  img = 'vendor-special/images/plupload'
+
+  [ js, css, img ].each do |dir|
+    rm_rf dir
+    mkdir_p dir
+  end
+
+  open_zip_url("https://github.com/downloads/moxiecode/plupload/plupload_1_5_4.zip") do |entry|
+    if entry.file?
+      target = case File.extname(entry.name)
+      when '.js'
+        js
+      when '.css'
+        css
+      else
+        img
+      end
+
+      [
+        [ 'plupload/js/jquery.plupload.queue/**/*', 'jquery.plupload.queue' ],
+        [ 'plupload/js/jquery.ui.plupload/**/*', 'jquery.ui.plupload' ],
+        [ 'plupload/js/*', '.' ],
+      ].each do |glob, dir|
+        if File.fnmatch?(glob, entry.name)
+          target = File.expand_path(File.join(target, dir, File.basename(entry.name)))
+
+          FileUtils.mkdir_p File.dirname(target)
+
+          entry.extract(target)
+
+          break
+        end
+      end
+    end
+  end
+end
 
