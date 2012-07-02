@@ -109,9 +109,11 @@ task :default => :update
 
 desc 'Update Plupload'
 task :update_plupload do
-  js = 'vendor-special/javascripts/plupload'
-  css = 'vendor-special/stylesheets/plupload'
-  img = 'vendor-special/images/plupload'
+  root = "vendor-special/assets"
+
+  js = "#{root}/javascripts/plupload"
+  css = "#{root}/stylesheets/plupload"
+  img = "#{root}/images/plupload"
 
   [ js, css, img ].each do |dir|
     rm_rf dir
