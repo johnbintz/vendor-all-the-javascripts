@@ -132,8 +132,10 @@ task :update_plupload do
       end
 
       [
-        [ 'plupload/js/jquery.plupload.queue/**/*', 'jquery.plupload.queue' ],
-        [ 'plupload/js/jquery.ui.plupload/**/*', 'jquery.ui.plupload' ],
+        [ 'plupload/js/jquery.plupload.queue/img/*', 'img' ],
+        [ 'plupload/js/jquery.plupload.queue/*', 'jquery.plupload.queue' ],
+        [ 'plupload/js/jquery.ui.plupload/img/*', 'img' ],
+        [ 'plupload/js/jquery.ui.plupload/*', 'jquery.ui.plupload' ],
         [ 'plupload/js/*', '.' ],
       ].each do |glob, dir|
         if File.fnmatch?(glob, entry.name)
