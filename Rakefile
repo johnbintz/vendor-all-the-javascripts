@@ -109,7 +109,7 @@ task :default => :update
 
 desc 'Update Plupload'
 task :update_plupload do
-  root = "vendor-special/assets"
+  root = "vendor/assets"
 
   js = "#{root}/javascripts/plupload"
   css = "#{root}/stylesheets/plupload"
