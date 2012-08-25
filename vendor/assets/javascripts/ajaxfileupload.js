@@ -89,7 +89,7 @@ jQuery.extend({
         xml.responseText = xml.responseText.replace(/^<pre>(.*)<\/pre>$/, '$1');
             }catch(e)
 			{
-				jQuery.handleError(s, xml, null, e);
+        throw e;
 			}
             if ( xml || isTimeout == "timeout") 
 			{				
@@ -100,12 +100,6 @@ jQuery.extend({
                     // Make sure that the request was successful or notmodified
                     if ( status != "error" )
 					{
-                        // process the data (runs the xml through httpData regardless of callback)
-                        if ($('pre', xml.responseText)) {
-                          var $doc = $("<div />").append(xml.responseText);
-
-                          xml = { responseText: $doc.find('pre').get(0).innerHTML};
-                        }
 
                         var data = jQuery.uploadHttpData( xml, s.dataType );    
                         // If a local callback was specified, fire it and pass it the data
@@ -115,12 +109,12 @@ jQuery.extend({
                         // Fire the global callback
                         if( s.global )
                             jQuery.event.trigger( "ajaxSuccess", [xml, s] );
-                    } else
-                        jQuery.handleError(s, xml, status);
+                        } else {
+                          if (s.error) { s.error(); }
+                        }
                 } catch(e) 
 				{
-                    status = "error";
-                    jQuery.handleError(s, xml, status, e);
+                    throw e;
                 }
 
                 // The request was completed
@@ -181,7 +175,7 @@ jQuery.extend({
 
         } catch(e) 
 		{			
-            jQuery.handleError(s, xml, null, e);
+            //jQuery.handleError(s, xml, null, e);
         }
 		
 		jQuery('#' + frameId).load(uploadCallback	);
